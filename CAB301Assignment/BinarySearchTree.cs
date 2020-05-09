@@ -41,29 +41,22 @@ namespace CAB301Assignment {
         public bool contains(string title) {
             Node current = root;
             while (current != null) {
-                //if (compareMovie(current.movie.title, title) == 0) {
-                //    return true;
-                //} else if (compareMovie(title, current.movie.title) < 0) {
-                //    current = current.left;
-                //} else if (compareMovie(current.movie.title, title) < 0) {
-                //    current = current.right;
-                //}
-                if (current.movie.CompareTo(movie) == 0) {
+                if (compareMovie(current.movie.title, title) == 0) {
                     return true;
-                } else if (movie.CompareTo(current.movie) < 0) {
+                } else if (compareMovie(title, current.movie.title) < 0) {
                     current = current.left;
-                } else if (current.movie.CompareTo(movie) < 0) {
+                } else if (compareMovie(current.movie.title, title) < 0) {
                     current = current.right;
                 }
             }
             return false;
         }
 
-        public void Remove(Movie movie) {
+        public void Remove(string title) {
             Node parent = null;
             Node current = root;
             while (current != null) {
-                if (current.movie.CompareTo(movie) == 0) {
+                if (compareMovie(current.movie.title, title) == 0) {
                     if (current.left == null && current.right == null) {
                         if (current == root) {
                             root = null;
@@ -85,12 +78,12 @@ namespace CAB301Assignment {
                     } else {
                         Node minParent = current;
                         Node min = current.right;
-                        while (min.left!= null) {
+                        while (min.left != null) {
                             minParent = min;
                             min = min.left;
                         }
 
-                        if(minParent == current) {
+                        if (minParent == current) {
                             minParent.right = min.right;
                         } else {
                             minParent.left = min.right;
@@ -105,10 +98,10 @@ namespace CAB301Assignment {
                         }
                     }
                     return;
-                } else if(movie.CompareTo(current.movie) < 0) {
+                } else if (compareMovie(title, current.movie.title) < 0) {
                     parent = current;
                     current = current.left;
-                } else if (current.movie.CompareTo(movie) < 0) {
+                } else if (compareMovie(current.movie.title, title) < 0) { 
                     parent = current;
                     current = current.right;
                 }
@@ -143,9 +136,16 @@ namespace CAB301Assignment {
                 tree.add(data[i]);
             }
 
-            Console.WriteLine(tree.contains(new Movie("GHK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)));
-            Console.WriteLine(tree.contains(new Movie("FUK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)));
-            Console.WriteLine(tree.contains(new Movie("AKK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)));
+            Console.WriteLine(tree.contains("GHK")); // true
+            Console.WriteLine(tree.contains("FKK")); // true
+            Console.WriteLine(tree.contains("KQK")); // true
+            Console.WriteLine(tree.contains("ADK")); // false
+            tree.Remove("GHK");
+            tree.Remove("FKK");
+            Console.WriteLine(tree.contains("GHK")); // false
+            Console.WriteLine(tree.contains("FKK")); // false
+            Console.WriteLine(tree.contains("OPK")); // true
+            Console.WriteLine(tree.contains("KQK")); // true
 
         }
     }
