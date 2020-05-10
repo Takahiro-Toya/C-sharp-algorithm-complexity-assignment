@@ -12,41 +12,46 @@ namespace CAB301Assignment {
     }
 
     public class BinarySearchTree {
+
+        public int Length {
+            get { return CountNodes(root); }
+        }
+
         private Node root;
 
-        public void add(Movie movie) {
+        public void Add(Movie movie) {
             if (root==null) {
                 root = new Node(movie);
                 return;
             }
 
-            Node current = root;
+            Node pin = root;
             while (true) {
-                if (movie.CompareTo(current.movie) < 0) {
-                    if (current.left == null) {
-                        current.left = new Node(movie);
+                if (movie.CompareTo(pin.movie) < 0) {
+                    if (pin.left == null) {
+                        pin.left = new Node(movie);
                         return;
                     }
-                    current = current.left;
-                } else if (current.movie.CompareTo(movie) <= 0) {
-                    if (current.right == null) {
-                        current.right = new Node(movie);
+                    pin = pin.left;
+                } else if (pin.movie.CompareTo(movie) <= 0) {
+                    if (pin.right == null) {
+                        pin.right = new Node(movie);
                         return;
                     }
-                    current = current.right;
+                    pin = pin.right;
                 }
             }
         }
 
-        public bool contains(string title) {
-            Node current = root;
-            while (current != null) {
-                if (compareMovie(current.movie.title, title) == 0) {
+        public bool Contains(string title) {
+            Node pin = root;
+            while (pin != null) {
+                if (CompareMovie(pin.movie.title, title) == 0) {
                     return true;
-                } else if (compareMovie(title, current.movie.title) < 0) {
-                    current = current.left;
-                } else if (compareMovie(current.movie.title, title) < 0) {
-                    current = current.right;
+                } else if (CompareMovie(title, pin.movie.title) < 0) {
+                    pin = pin.left;
+                } else if (CompareMovie(pin.movie.title, title) < 0) {
+                    pin = pin.right;
                 }
             }
             return false;
@@ -54,61 +59,61 @@ namespace CAB301Assignment {
 
         public void Remove(string title) {
             Node parent = null;
-            Node current = root;
-            while (current != null) {
-                if (compareMovie(current.movie.title, title) == 0) {
-                    if (current.left == null && current.right == null) {
-                        if (current == root) {
+            Node pin = root;
+            while (pin != null) {
+                if (CompareMovie(pin.movie.title, title) == 0) {
+                    if (pin.left == null && pin.right == null) {
+                        if (pin == root) {
                             root = null;
                         } else {
-                            UpdateLink(parent, current, null);
+                            UpdateNote(parent, pin, null);
                         }
-                    } else if (current.left != null && current.right == null) {
-                        if (current == root) {
+                    } else if (pin.left != null && pin.right == null) {
+                        if (pin == root) {
                             root = root.left;
                         } else {
-                            UpdateLink(parent, current, current.left);
+                            UpdateNote(parent, pin, pin.left);
                         }
-                    } else if (current.left == null & current.right != null) {
-                        if (current == root) {
+                    } else if (pin.left == null & pin.right != null) {
+                        if (pin == root) {
                             root = root.right;
                         } else {
-                            UpdateLink(parent, current, current.right);
+                            UpdateNote(parent, pin, pin.right);
                         }
                     } else {
-                        Node minParent = current;
-                        Node min = current.right;
+                        Node minParent = pin;
+                        Node min = pin.right;
                         while (min.left != null) {
                             minParent = min;
                             min = min.left;
                         }
 
-                        if (minParent == current) {
+                        if (minParent == pin) {
                             minParent.right = min.right;
                         } else {
                             minParent.left = min.right;
                         }
 
-                        min.left = current.left;
-                        min.right = current.right;
-                        if (current == root) {
+                        min.left = pin.left;
+                        min.right = pin.right;
+                        if (pin == root) {
                             root = min;
                         } else {
-                            UpdateLink(parent, current, min);
+                            UpdateNote(parent, pin, min);
                         }
                     }
                     return;
-                } else if (compareMovie(title, current.movie.title) < 0) {
-                    parent = current;
-                    current = current.left;
-                } else if (compareMovie(current.movie.title, title) < 0) { 
-                    parent = current;
-                    current = current.right;
+                } else if (CompareMovie(title, pin.movie.title) < 0) {
+                    parent = pin;
+                    pin = pin.left;
+                } else if (CompareMovie(pin.movie.title, title) < 0) { 
+                    parent = pin;
+                    pin = pin.right;
                 }
             }
         }
 
-        private void UpdateLink(Node parent, Node target, Node replace) {
+        private void UpdateNote(Node parent, Node target, Node replace) {
             if (parent.left == target) {
                 parent.left = replace;
             } else {
@@ -116,8 +121,57 @@ namespace CAB301Assignment {
             }
         }
 
-        private int compareMovie(string title, string anotherTitle) {
+        private int CompareMovie(string title, string anotherTitle) {
             return string.Compare(title, anotherTitle);
+        }
+
+        private int CountNodes(Node entry) {
+            if (entry == null) {
+                return 0;
+            } else {
+                Node pin = entry;
+                return 1 + CountNodes(pin.left) + CountNodes(pin.right);
+            }
+        }
+
+        public void InOrderTraversal(Node node) {
+            
+            if (node == null) {
+                return;
+            } else {
+                InOrderTraversal(node.left);
+                Console.WriteLine("{0}, ", node.movie.title);
+                InOrderTraversal(node.right);
+            }
+        }
+
+        public Movie[] GetAllNodes() {
+
+            Movie[] sorted = new Movie[Length];
+            int count = 0;
+            InOrderTraversal(root);
+
+            void InOrderTraversal(Node node) {
+                if (node == null) {
+                    return;
+                } else {
+                    InOrderTraversal(node.left);
+                    sorted[count] = node.movie;
+                    count++;
+                    InOrderTraversal(node.right);
+                }
+            }
+
+            return sorted;
+        }
+
+        public string GetAllMovieTitle() {
+            string text = "";
+            foreach (Movie m in GetAllNodes()) {
+                text += m.title;
+                text += " ";
+            }
+            return text;
         }
 
         static void Main(string[] args) {
@@ -125,28 +179,38 @@ namespace CAB301Assignment {
             BinarySearchTree tree = new BinarySearchTree();
 
             Movie[] data = {
-                new Movie("GHK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("FKK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("KQK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("OPK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("ACK", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)
+                new Movie("ghk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("fkk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("kqk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("opq", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("ack", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("ghj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("fkj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("kqj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("opp", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+                new Movie("acj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)
             };
 
             for (int i = 0; i < data.Length; i++) {
-                tree.add(data[i]);
+                tree.Add(data[i]);
             }
 
-            Console.WriteLine(tree.contains("GHK")); // true
-            Console.WriteLine(tree.contains("FKK")); // true
-            Console.WriteLine(tree.contains("KQK")); // true
-            Console.WriteLine(tree.contains("ADK")); // false
-            tree.Remove("GHK");
-            tree.Remove("FKK");
-            Console.WriteLine(tree.contains("GHK")); // false
-            Console.WriteLine(tree.contains("FKK")); // false
-            Console.WriteLine(tree.contains("OPK")); // true
-            Console.WriteLine(tree.contains("KQK")); // true
-
+            //Console.WriteLine(tree.Contains("GHK")); // true
+            //Console.WriteLine(tree.Contains("FKK")); // true
+            //Console.WriteLine(tree.Contains("KQK")); // true
+            //Console.WriteLine(tree.Contains("ADK")); // false
+            //Console.WriteLine(tree.Length); // 5
+            //tree.Remove("GHK");
+            //tree.Remove("FKK");
+            //tree.Remove("ADK");
+            //Console.WriteLine(tree.Contains("GHK")); // false
+            //Console.WriteLine(tree.Contains("FKK")); // false
+            //Console.WriteLine(tree.Contains("OPK")); // true
+            //Console.WriteLine(tree.Contains("KQK")); // true
+            //Console.WriteLine(tree.Contains("ADK")); // false
+            //Console.WriteLine(tree.Length); // 3
+            Console.WriteLine(tree.GetAllMovieTitle());
+            //tree.InOrderTraversal(tree.root);
         }
     }
 }
