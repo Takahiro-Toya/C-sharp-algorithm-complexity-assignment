@@ -111,7 +111,7 @@ namespace CAB301Assignment {
                 "2. Member Login\n" +
                 "0. Exit\n" +
                 "================================");
-            switch (Reusables.waitUserResponse(" Please make a selection (1-2, or 0 to exit): ", new int[] { 0, 1, 2 })) {
+            switch (Reusables.waitUserResponse("\n Please make a selection (1-2, or 0 to exit): ", new int[] { 0, 1, 2 })) {
                 case 0:
                     appStatus = AppStatus.Exit;
                     break;
@@ -139,7 +139,7 @@ namespace CAB301Assignment {
                     "4. Find a registered member's phone number\n" +
                     "0. Return to main menu\n" +
                     "=================================");
-                switch (Reusables.waitUserResponse(" Please make a selection (1-4 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4 })) {
+                switch (Reusables.waitUserResponse("\n Please make a selection (1-4 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4 })) {
                     case 0:
                         appStatus = AppStatus.MainMenu;
                         break;
@@ -175,7 +175,7 @@ namespace CAB301Assignment {
                     "5. Display top 10 most popular movies\n" +
                     "0. Return to main menu\n" +
                     "===================================");
-                switch (Reusables.waitUserResponse(" Please make a selection (1-5 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4, 5 })) {
+                switch (Reusables.waitUserResponse("\n Please make a selection (1-5 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4, 5 })) {
                     case 0:
                         appStatus = AppStatus.MainMenu;
                         break;
@@ -207,7 +207,7 @@ namespace CAB301Assignment {
                 if (Console.ReadLine() == staffUsername) {
                     break;
                 } else {
-                    Console.WriteLine("** username is wrong **");
+                    Console.WriteLine("\n ** username is wrong ** \n");
                 }
             }
 
@@ -216,7 +216,7 @@ namespace CAB301Assignment {
                 if (Console.ReadLine() == staffPassword) {
                     break;
                 } else {
-                    Console.WriteLine("** password is wrong **");
+                    Console.WriteLine("\n ** password is wrong ** \n");
                 }
             }
             staffVerified = true;
@@ -224,7 +224,7 @@ namespace CAB301Assignment {
 
         static void MemberLogin() {
             if (memberCollection.NumMembers == 0) {
-                Console.WriteLine("No member registered");
+                Console.WriteLine("\n ** No member registered ** \n");
                 appStatus = AppStatus.MainMenu;
                 return;
             } else {
@@ -233,7 +233,7 @@ namespace CAB301Assignment {
                     Console.Write("username: ");
                     search = memberCollection.FindMember(Console.ReadLine());
                     if (search == null) {
-                        Console.WriteLine("member not found");
+                        Console.WriteLine("\n ** member not found ** \n");
                     } else {
                         break;
                     }
@@ -243,7 +243,7 @@ namespace CAB301Assignment {
                     if (search.password == Console.ReadLine()) {
                         break;
                     } else {
-                        Console.WriteLine("** password is wrong");
+                        Console.WriteLine("\n ** password is wrong ** \n");
                     }
                 }
                 user = search;
@@ -260,9 +260,9 @@ namespace CAB301Assignment {
         static void Staff1Package() {
             Movie m = StaffOptions.Staff1();
             if (movieCollection.AddMovie(m)) {
-                Console.WriteLine("Movie added!");
+                Console.WriteLine("\n !!! Movie added !!! \n");
             } else {
-                Console.WriteLine("** Movie already exists!");
+                Console.WriteLine("\n ** Movie already exists ** \n");
             }
             appStatus = AppStatus.StaffMenu;
         }
@@ -274,12 +274,12 @@ namespace CAB301Assignment {
         static void Staff2Package() {
             Movie[] movies = movieCollection.GetAllMovies();
             if (movies.Length == 0) {
-                Console.WriteLine("No movies available");
+                Console.WriteLine("\n ** No movies available ** \n");
                 return;
             } else {
                 string title = StaffOptions.Staff2(movies);
                 movieCollection.RemoveMovie(title);
-                Console.WriteLine("Movie DVD removed!");
+                Console.WriteLine("\n !!! Movie DVD removed !!! \n");
             }
             appStatus = AppStatus.StaffMenu;
         }
@@ -291,7 +291,7 @@ namespace CAB301Assignment {
         static void Staff3Package() {
             Member m = StaffOptions.Staff3();
             memberCollection.RegisterMember(m);
-            Console.WriteLine("Member registered!");
+            Console.WriteLine("\n !!! Member registered !!! \n");
             appStatus = AppStatus.StaffMenu;
         }
 
@@ -300,7 +300,7 @@ namespace CAB301Assignment {
         /// </summary>
         static void Staff4Package() {
             string ph = memberCollection.FindMemberPhoneNumber(StaffOptions.Staff4());
-            Console.WriteLine("Phone number is: {0}", ph);
+            Console.WriteLine("\n Phone number is: {0} \n", ph);
             appStatus = AppStatus.StaffMenu;
         }
 
@@ -319,16 +319,35 @@ namespace CAB301Assignment {
         static void Member2Package() {
             Movie[] movies = movieCollection.GetAllMovies();
             if (movies.Length == 0) {
-                Console.WriteLine("No movies available");
+                Console.WriteLine("\n ** No movies available ** \n");
             } else {
                 string title = MemberOptions.Member2(movies);
                 Movie m = movieCollection.GetMovie(title);
-                m.Borrowed();
-                if (user.BorrowMovie(m)) {
-                    Console.WriteLine("Successfully borrowed!");
-                } else {
-                    Console.WriteLine("You reach maximum number of borrowing!");
-                } 
+                try {
+                    // user already borrow this movie
+                    if (user.ContainsMovie(m)) {
+                        Console.WriteLine("\n ** You already have been borrowing this movie** \n");
+                    // user does not hold this movie, AND;
+                    } else {
+                        // movie is available
+                        if (m.IsAvailable) {
+                            // fetch success code 
+                            if (user.BorrowMovie(m)) {
+                                m.Borrowed();
+                                Console.WriteLine("\n !!! Successfully borrowed !!! \n");
+                            // fetch error code after checking current number of borrowing in user account
+                            } else {
+                                Console.WriteLine("\n ** You reach maximum number of borrowing ** \n");
+                            }
+                        } else {
+                            Console.WriteLine("\n ** No copies available ** \n");
+                        }
+                    }
+                    // should not occur as the title is selected by index number
+                } catch {
+                    Console.WriteLine("\n ** Something wrong, borrow failed ** \n");
+                }
+
             }
             appStatus = AppStatus.MemberMenu;
         }
@@ -338,7 +357,7 @@ namespace CAB301Assignment {
         /// </summary>
         static void Member3Package() {
             if (user.NumBorrowing == 0) {
-                Console.WriteLine("You have no movies borroing");
+                Console.WriteLine("\n ** You have no movies borroing ** \n");
             } else {
                 string title = MemberOptions.Member3(user.GetBorrowingMovies());
                 user.ReturnMovie(title);
@@ -352,7 +371,7 @@ namespace CAB301Assignment {
         /// </summary>
         static void Member4Package() {
             if (user.NumBorrowing == 0) {
-                Console.WriteLine("You have no movies borrowing");
+                Console.WriteLine("\n ** You have no movies borrowing ** \n");
             } else {
                 Console.WriteLine(MemberOptions.Member4(user.GetBorrowingMovies()));
                 Reusables.waitUserPressEnter();

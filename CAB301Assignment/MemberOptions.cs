@@ -94,13 +94,13 @@ namespace CAB301Assignment {
                 return "\n  No movies available";
             } else {
                 string text = "";
-                for (int i = 1; i <= 10; i++) {
+                for (int i = 0; i < 10; i++) {
                     if (rank[i].movies.Length == 0) {
-                        text += string.Format("{0}. -----\n", i);
+                        text += string.Format("{0}. -----\n", i + 1);
                         continue;
                     }
                     for (int j = 0; j < rank[i].movies.Length; j++) {
-                        text += string.Format("{0}. {1} ({2})\n", i, rank[i].movies[j].title, rank[i].movies[j].NumBorrowed);
+                        text += string.Format("{0}. {1} ({2})\n", i + 1, rank[i].movies[j].title, rank[i].movies[j].NumBorrowed);
                     }
                 }
                 return text;

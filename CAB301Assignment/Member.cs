@@ -51,6 +51,17 @@ namespace CAB301Assignment {
             return false;
         }
 
+        public bool ContainsMovie(Movie movie) {
+            foreach(Movie m in borrowingMovies) {
+                if (m != null) {
+                    if (m.title == movie.title) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public Movie[] GetBorrowingMovies() {
 
             return borrowingMovies;

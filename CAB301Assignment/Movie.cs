@@ -37,14 +37,13 @@ namespace CAB301Assignment {
             return new Movie(title, starring, director, duration, genre, classification, releaseDate, numCopies);
         }
 
-        public bool Borrowed() {
-            if (numCopies <= 0) {
-                return false;
-            } else {
-                numBorrowed++;
-                numCopies--;
-                return true;
-            }
+        public bool IsAvailable {
+            get { return numCopies > 0; }
+        }
+
+        public void Borrowed() {
+            numBorrowed++;
+            numCopies--;
         }
 
         public void Returned() {
