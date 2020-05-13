@@ -7,11 +7,11 @@ namespace CAB301Assignment {
             string title = "";
             string starring = "";
             string director = "";
-            string duration = "0";
+            int duration = 0;
             int numCopies = 0;
             Genre genre = Genre.Drama;
             Classification classification = Classification.General;
-            string releaseDate = "01-01-2000";
+            int releaseDate = 2000;
 
             Console.WriteLine("\n=====Add Movie=====");
             Console.Write("Title: ");
@@ -20,9 +20,8 @@ namespace CAB301Assignment {
             starring = Console.ReadLine();
             Console.Write("Director: ");
             director = Console.ReadLine();
-            Console.Write("Duration (minutes): ");
-            duration = Console.ReadLine();
-            switch (Reusables.waitUserResponse("Genre:\n" +
+            duration = Reusables.waitUserIntegerResponse("Duration(minutes): ");
+            genre = (Reusables.waitUserResponse("Genre:\n" +
                                                    "1. Drama\n" +
                                                    "2. Adventure\n" +
                                                    "3. Family\n" +
@@ -32,82 +31,59 @@ namespace CAB301Assignment {
                                                    "7. Animated\n" +
                                                    "8. Thriller\n" +
                                                    "9. Other\n" +
-                                                   "Select: ", new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })) {
-                case 1:
-                    genre = Genre.Drama;
-                    break;
-                case 2:
-                    genre = Genre.Adventure;
-                    break;
-                case 3:
-                    genre = Genre.Family;
-                    break;
-                case 4:
-                    genre = Genre.Action;
-                    break;
-                case 5:
-                    genre = Genre.SciFi;
-                    break;
-                case 6:
-                    genre = Genre.Comedy;
-                    break;
-                case 7:
-                    genre = Genre.Animated;
-                    break;
-                case 8:
-                    genre = Genre.Thriller;
-                    break;
-                case 9:
-                    genre = Genre.Other;
-                    break;
-                default:
-                    genre = Genre.Other;
-                    break;
-            }
-            switch (Reusables.waitUserResponse("Classification:\n" +
+                                                   "Select: ", new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })) switch
+            {
+                1 => Genre.Drama,
+                2 => Genre.Adventure,
+                3 => Genre.Family,
+                4 => Genre.Action,
+                5 => Genre.SciFi,
+                6 => Genre.Comedy,
+                7 => Genre.Animated,
+                8 => Genre.Thriller,
+                9 => Genre.Other,
+                _ => Genre.Other,
+            };
+            classification = (Reusables.waitUserResponse("Classification:\n" +
                                                    "1. General (G)\n" +
                                                    "2. Parental Guidance (PG)\n" +
                                                    "3. Mature (M15+)\n" +
                                                    "4. Mature Accompanies (MA15+)\n" +
-                                                   "Select: ", new int[] {1,2,3,4})) {
-                case 1:
-                    classification = Classification.General;
-                    break;
-                case 2:
-                    classification = Classification.ParentalGuidance;
-                    break;
-                case 3:
-                    classification = Classification.Mature;
-                    break;
-                case 4:
-                    classification = Classification.MatureAccompanied;
-                    break;
-                default:
-                    classification = Classification.General;
-                    break;
-            }
-            Console.Write("Release date: (DD-MM-YYYY): ");
-            releaseDate = Console.ReadLine();
+                                                   "Select: ", new int[] { 1, 2, 3, 4 })) switch
+            {
+                1 => Classification.General,
+                2 => Classification.ParentalGuidance,
+                3 => Classification.Mature,
+                4 => Classification.MatureAccompanied,
+                _ => Classification.General,
+            };
+            releaseDate = Reusables.waitUserIntegerResponse("Release date (year): ");
             numCopies = Reusables.waitUserIntegerResponse("Number of copies: ");
             return new Movie(title, starring, director, duration, genre, classification, releaseDate, numCopies);
         }
 
 
 
-        public static string Staff2(string[] movies) {
+        public static string Staff2(Movie[] movies) {
             // ask what movie title they want to remove
             Console.WriteLine("\n====Remove movie=====");
-            int choice = Reusables.waitUserResponse(Reusables.formtToList(movies), Reusables.createIntArray(1, movies.Length));
-            return movies[choice];
+            // display all movie title in the store
+            for (int i = 0; i < movies.Length; i++) {
+                Console.WriteLine("{0}. {1}", i + 1, movies[i].title);
+            }
+            // ask which title they want to borrow (input by number)
+            int res = Reusables.waitUserResponse("Select by number: ", Reusables.createIntArray(1, movies.Length));
+            // return title
+            return movies[res - 1].title;
         }
 
         public static Member Staff3() {
-            // ask member detail¥
+            // ask member detail
             string givenName;
             string familyName;
             string address;
             string phoneNumber;
-            int password;
+            string password;
             Console.WriteLine("\n=====Add new member===");
             Console.Write("Given name: ");
             givenName = Console.ReadLine();
@@ -121,16 +97,10 @@ namespace CAB301Assignment {
             return new Member(givenName, familyName, address, phoneNumber, password);
         }
 
-        public static string[] Staff4() {
-            // ask member family & given name
-            string givenName;
-            string familyName;
+        public static string Staff4() {
             Console.WriteLine("\n=====Find phone number=====");
-            Console.Write("Family name: ");
-            familyName = Console.ReadLine();
-            Console.Write("Given name: ");
-            givenName = Console.ReadLine();
-            return new string[2] { Reusables.ToTitleCase(familyName), Reusables.ToTitleCase(givenName)};
+            Console.Write("Username: ");
+            return Console.ReadLine();
         }
     }
 }

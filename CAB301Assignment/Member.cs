@@ -8,12 +8,15 @@ namespace CAB301Assignment {
         public string phoneNumber = "";
 
         public string username = "";
-        public int password = 0;
-
-        private Movie[] borrowingMovies = new Movie[10];
+        public string password = "0000";
+        private const int BORROW_LIMIT = 10;
+        private Movie[] borrowingMovies = new Movie[BORROW_LIMIT];
         private int numBorrowing = 0;
+        public int NumBorrowing {
+            get { return numBorrowing; }
+        }
 
-        public Member(string givenName, string familyName, string address, string phoneNumber, int password) {
+        public Member(string givenName, string familyName, string address, string phoneNumber, string password) {
             this.givenName = Reusables.ToTitleCase(givenName);
             this.familyName = Reusables.ToTitleCase(familyName);
             this.address = address;
@@ -24,8 +27,9 @@ namespace CAB301Assignment {
 
         public bool BorrowMovie(Movie m) {
 
-            if (numBorrowing >= 10) { return false; }
-            for(int i=0; i<numBorrowing; i++) {
+            if (numBorrowing >= BORROW_LIMIT) { return false; }
+            for(int i=0; i< BORROW_LIMIT; i++) {
+             
                 if (borrowingMovies[i] == null) {
                     borrowingMovies[i] = m;
                     numBorrowing++;

@@ -9,6 +9,11 @@ namespace CAB301Assignment {
         /// </summary>
         private Member[] members = new Member[MAX_MEMBERS];
 
+        private int numMembers = 0;
+        public int NumMembers {
+            get { return numMembers; }
+        }
+
         public MemberCollection()
         {
         }
@@ -19,12 +24,19 @@ namespace CAB301Assignment {
 
         /// <summary>
         /// Staff will use this function
+        /// return false if member aleady exists OR number of members exceeds 10
         /// </summary>
         /// <param name="member"></param>
         public bool RegisterMember(Member member) {
-            for (int i=0; i< MAX_MEMBERS; i++) {
-                if (members[i] == null) {
-                    members[i] = member;
+            if (FindMember(member.username) != null) {
+                return false;
+            }
+            for (int i = 0; i < MAX_MEMBERS; i++) {
+                if (numMembers >= 10) {
+                    return false;
+                } else {
+                    members[numMembers] = member;
+                    numMembers++;
                     return true;
                 }
             }
@@ -37,8 +49,8 @@ namespace CAB301Assignment {
         /// <param name="familyName"></param>
         /// <param name="givenName"></param>
         /// <returns></returns>
-        public string FindMemberPhoneNumber(string familyName, string givenName) {
-            Member member = findMember(Reusables.ToUserName(familyName, givenName));
+        public string FindMemberPhoneNumber(string username) {
+            Member member = FindMember(username);
             if (member == null) {
                 return "User not found";
             } else {
@@ -53,7 +65,7 @@ namespace CAB301Assignment {
         /// <param name="username"></param>
         /// <returns></returns>
         public bool BorrowMovie(Movie movie, string username) {
-            Member member = findMember(username);
+            Member member = FindMember(username);
             return member.BorrowMovie(movie);
         }
 
@@ -64,22 +76,26 @@ namespace CAB301Assignment {
         /// <param name="familyName"></param>
         /// <param name="givenName"></param>
         public bool ReturnMovie(string title, string username) {
-            Member member = findMember(username);
+            Member member = FindMember(username);
             return member.ReturnMovie(title);
         }
 
-        public Movie[] GetMoviesCurrentlyBeingLent(string username) {
-            Member member = findMember(username);
+        public Movie[] GetMoviesCurrentlyBorrowing(string username) {
+            Member member = FindMember(username);
             return member.GetBorrowingMovies();
         }
 
-        private Member findMember(string username) {
-            foreach(Member m in members) {
-                if (m.username == username) {
-                    return m;
+        public Member FindMember(string username) {
+            foreach (Member m in members) {
+                try {
+                    if (m.username == username) {
+                        return m;
+                    }
+                } catch {
+                    return null;
                 }
+ 
             }
-
             return null;
         }
 

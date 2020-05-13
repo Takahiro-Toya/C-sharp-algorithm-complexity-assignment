@@ -57,6 +57,21 @@ namespace CAB301Assignment {
             return false;
         }
 
+
+        public Movie GetMovie(string title) {
+            Node pin = root;
+            while (pin != null) {
+                if (CompareMovie(pin.movie.title, title) == 0) {
+                    return pin.movie;
+                } else if (CompareMovie(title, pin.movie.title) < 0) {
+                    pin = pin.left;
+                } else if (CompareMovie(pin.movie.title, title) < 0) {
+                    pin = pin.right;
+                }
+            }
+            return null;
+        }
+
         public void Remove(string title) {
             Node parent = null;
             Node pin = root;
@@ -134,17 +149,10 @@ namespace CAB301Assignment {
             }
         }
 
-        public void InOrderTraversal(Node node) {
-            
-            if (node == null) {
-                return;
-            } else {
-                InOrderTraversal(node.left);
-                Console.WriteLine("{0}, ", node.movie.title);
-                InOrderTraversal(node.right);
-            }
-        }
-
+        /// <summary>
+        /// Return all movies in alphabetical order of title
+        /// </summary>
+        /// <returns>sorted movies</returns>
         public Movie[] GetAllNodes() {
 
             Movie[] sorted = new Movie[Length];
@@ -165,52 +173,84 @@ namespace CAB301Assignment {
             return sorted;
         }
 
-        public string GetAllMovieTitle() {
+
+        public Movie[] GetTopTenList() {
+            Movie[] array = GetAllNodes();
+            Movie[] sorted = new Movie[array.Length];
+            void QuickSort(Movie[] movies, int left, int right) {
+                
+                if (left >= right) { return; }
+
+                Movie pivot = movies[left];
+                int l = left;
+                int r = right;
+
+                while (true) {
+                    while (movies[l].NumBorrowed > pivot.NumBorrowed) {
+                        l++;
+                    }
+                    while (movies[r].NumBorrowed < pivot.NumBorrowed) {
+                        r--;
+                    }
+                    if (l >= r) {
+                        break;
+                    }
+                    Movie temp = movies[l];
+                    movies[l] = movies[r];
+                    movies[r] = temp;
+                    l++;
+                    r--;
+                }
+                
+                QuickSort(movies, left, l - 1);
+                QuickSort(movies, r + 1, right);
+            }
+            QuickSort(array, 0, array.Length - 1);
+            return array;
+        }
+
+        public string Top10Text() {
             string text = "";
-            foreach (Movie m in GetAllNodes()) {
-                text += m.title;
-                text += " ";
+            foreach (Movie m in GetTopTenList()) {
+                text += m.title + "-" + m.NumBorrowed;
+                text += ", ";
             }
             return text;
         }
 
-        static void Main(string[] args) {
+        //static void Main(string[] args) {
 
-            BinarySearchTree tree = new BinarySearchTree();
+        //    BinarySearchTree tree = new BinarySearchTree();
 
-            Movie[] data = {
-                new Movie("ghk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("fkk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("kqk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("opq", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("ack", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("ghj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("fkj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("kqj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("opp", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
-                new Movie("acj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)
-            };
+        //    Movie[] data = {
+        //        new Movie("ghk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("fkk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("kqk", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("opq", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("ack", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("ghj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("fkj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("kqj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("opp", "1", "11", "111", Genre.Action, Classification.General, "1111", 10),
+        //        new Movie("acj", "1", "11", "111", Genre.Action, Classification.General, "1111", 10)
+        //    };
 
-            for (int i = 0; i < data.Length; i++) {
-                tree.Add(data[i]);
-            }
+        //    data[0].Borrowed();
+        //    data[0].Borrowed();
+        //    data[0].Borrowed();
+        //    data[0].Borrowed(); //ghk -4
+        //    data[1].Borrowed(); 
+        //    data[1].Borrowed(); //fkk -2
+        //    data[2].Borrowed(); //kqk - 1
+        //    data[3].Borrowed(); //opq - 1
+        //    data[5].Borrowed(); //ghj - 1 
 
-            //Console.WriteLine(tree.Contains("GHK")); // true
-            //Console.WriteLine(tree.Contains("FKK")); // true
-            //Console.WriteLine(tree.Contains("KQK")); // true
-            //Console.WriteLine(tree.Contains("ADK")); // false
-            //Console.WriteLine(tree.Length); // 5
-            //tree.Remove("GHK");
-            //tree.Remove("FKK");
-            //tree.Remove("ADK");
-            //Console.WriteLine(tree.Contains("GHK")); // false
-            //Console.WriteLine(tree.Contains("FKK")); // false
-            //Console.WriteLine(tree.Contains("OPK")); // true
-            //Console.WriteLine(tree.Contains("KQK")); // true
-            //Console.WriteLine(tree.Contains("ADK")); // false
-            //Console.WriteLine(tree.Length); // 3
-            Console.WriteLine(tree.GetAllMovieTitle());
-            //tree.InOrderTraversal(tree.root);
-        }
+        //    for (int i = 0; i < data.Length; i++) {
+        //        tree.Add(data[i]);
+        //    }
+
+        //    Console.WriteLine(tree.GetAllMovieTitle());
+        //    Console.WriteLine(tree.Top10Text());
+        //}
     }
 }

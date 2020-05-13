@@ -7,17 +7,23 @@ namespace CAB301Assignment {
         public string title;
         public string starring;
         public string director;
-        public string duration;
+        public int duration;
         public Genre genre;
         public Classification classification;
-        public string releaseDate;
+        public int releaseDate;
 
         private int numBorrowed = 0;
-        private int numCopies = 0;   
+        public int NumBorrowed {
+            get { return numBorrowed;  }
+        }
+        private int numCopies = 0;
+        public int NumCopies {
+            get { return numCopies; }
+        }
 
-        public Movie(string title, string starring, string director, string duration, Genre genre, Classification classification, string releaseDate, int numCopies) 
+        public Movie(string title, string starring, string director, int duration, Genre genre, Classification classification, int releaseDate, int numCopies) 
         {
-            this.title = title;
+            this.title = Reusables.ToTitleCase(title);
             this.starring = starring;
             this.director = director;
             this.duration = duration;
@@ -41,16 +47,8 @@ namespace CAB301Assignment {
             }
         }
 
-        public void IncrementNumCopies() {
+        public void Returned() {
             numCopies++;
-        }
-
-        public void DecrementNumCopies() {
-            if(numCopies - 1 < 0) {
-                return;
-            } else {
-                numCopies--;
-            }
         }
 
         override public string ToString() {
