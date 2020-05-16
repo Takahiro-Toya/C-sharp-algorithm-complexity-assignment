@@ -1,5 +1,9 @@
 ﻿using System;
 namespace CAB301Assignment {
+
+    /// <summary>
+    /// Genre enum
+    /// </summary>
     public enum Genre {
         Drama,
         Adventure,
@@ -12,6 +16,9 @@ namespace CAB301Assignment {
         Other
     }
 
+    /// <summary>
+    /// Collection of methods to handle Genre enum
+    /// </summary>
     public static class GenreMethods {
         public static string toString(this Genre genre) {
             return genre switch
@@ -30,6 +37,9 @@ namespace CAB301Assignment {
         }
     }
 
+    /// <summary>
+    /// Classfication enum
+    /// </summary>
     public enum Classification {
         General,
         ParentalGuidance,
@@ -37,6 +47,9 @@ namespace CAB301Assignment {
         MatureAccompanied,
     }
 
+    /// <summary>
+    /// Collection of methods to handle Classfication enum
+    /// </summary>
     public static class ClassificationMethods {
         public static string toString(this Classification classification) {
             return classification switch
@@ -50,7 +63,9 @@ namespace CAB301Assignment {
         }
     }
 
-
+    /// <summary>
+    /// AppStatus enum
+    /// </summary>
     public enum AppStatus {
         Exit,
         MainMenu,

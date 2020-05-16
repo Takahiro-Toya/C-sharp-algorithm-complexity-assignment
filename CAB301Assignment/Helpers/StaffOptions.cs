@@ -2,26 +2,22 @@
 namespace CAB301Assignment {
     public static class StaffOptions {
 
+        /// <summary>
+        /// Helps input menu for staff to add a movie
+        /// This simply create a movie object based on the input
+        /// No duplication check
+        /// </summary>
+        /// <returns>Movie object</returns>
         public static Movie Staff1() {
-
-            string title = "";
-            string starring = "";
-            string director = "";
-            int duration = 0;
-            int numCopies = 0;
-            Genre genre = Genre.Drama;
-            Classification classification = Classification.General;
-            int releaseDate = 2000;
-
             Console.WriteLine("\n=====Add Movie=====");
             Console.Write("Title: ");
-            title = Console.ReadLine();
+            string title = Console.ReadLine();
             Console.Write("Starring: ");
-            starring = Console.ReadLine();
+            string starring = Console.ReadLine();
             Console.Write("Director: ");
-            director = Console.ReadLine();
-            duration = Reusables.waitUserIntegerResponse("Duration(minutes): ");
-            genre = (Reusables.waitUserResponse("Genre:\n" +
+            string director = Console.ReadLine();
+            int duration = Reusables.waitUserIntegerResponse("Duration(minutes): ");
+            Genre genre = (Reusables.waitUserResponse("Genre:\n" +
                                                    "1. Drama\n" +
                                                    "2. Adventure\n" +
                                                    "3. Family\n" +
@@ -44,7 +40,7 @@ namespace CAB301Assignment {
                 9 => Genre.Other,
                 _ => Genre.Other,
             };
-            classification = (Reusables.waitUserResponse("Classification:\n" +
+            Classification classification = (Reusables.waitUserResponse("Classification:\n" +
                                                    "1. General (G)\n" +
                                                    "2. Parental Guidance (PG)\n" +
                                                    "3. Mature (M15+)\n" +
@@ -57,13 +53,19 @@ namespace CAB301Assignment {
                 4 => Classification.MatureAccompanied,
                 _ => Classification.General,
             };
-            releaseDate = Reusables.waitUserIntegerResponse("Release date (year): ");
-            numCopies = Reusables.waitUserIntegerResponse("Number of copies: ");
+            int releaseDate = Reusables.waitUserIntegerResponse("Release date (year): ");
+            int numCopies = Reusables.waitUserIntegerResponse("Number of copies: ");
             return new Movie(title, starring, director, duration, genre, classification, releaseDate, numCopies);
         }
 
 
-
+        /// <summary>
+        /// Helps input for staff to remove movie
+        /// It returns title of the movie, selected by the index number
+        /// So, no need to check its validity
+        /// </summary>
+        /// <param name="movies">array of movies that are currently registered</param>
+        /// <returns>title of the movie to be removed</returns>
         public static string Staff2(Movie[] movies) {
             // ask what movie title they want to remove
             Console.WriteLine("\n====Remove movie=====");
@@ -77,26 +79,31 @@ namespace CAB301Assignment {
             return movies[res - 1].title;
         }
 
+        /// <summary>
+        /// Helps input for staff to register new member
+        /// This simply creates a member object, and so
+        /// the duplication check should be performed after getting a value returned from this method
+        /// </summary>
+        /// <returns>Member object</returns>
         public static Member Staff3() {
-            // ask member detail
-            string givenName;
-            string familyName;
-            string address;
-            string phoneNumber;
-            string password;
             Console.WriteLine("\n=====Add new member===");
             Console.Write("Given name: ");
-            givenName = Console.ReadLine();
+            string givenName = Console.ReadLine();
             Console.Write("Family name: ");
-            familyName = Console.ReadLine();
+            string familyName = Console.ReadLine();
             Console.Write("Address: ");
-            address = Console.ReadLine();
+            string address = Console.ReadLine();
             Console.Write("Phone number: ");
-            phoneNumber = Console.ReadLine();
-            password = Reusables.waitUserSetPassword("Password: ");
+            string phoneNumber = Console.ReadLine();
+            string password = Reusables.waitUserSetPassword("Password: ");
             return new Member(givenName, familyName, address, phoneNumber, password);
         }
 
+        /// <summary>
+        /// Helps input for staff to find phone number of the movie
+        /// This method asks member's username that the staff wants to find phone number
+        /// </summary>
+        /// <returns>the username of member</returns>
         public static string Staff4() {
             Console.WriteLine("\n=====Find phone number=====");
             Console.Write("Username: ");

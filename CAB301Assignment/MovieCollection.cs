@@ -2,47 +2,239 @@
 namespace CAB301Assignment {
     public class MovieCollection {
 
+
+        private MovieNode root = null;
+
         /// <summary>
-        /// This must be binary search tree
+        /// number of nodes in this tree
         /// </summary>
-        private BinarySearchTree movieTree = new BinarySearchTree();
-
-
-        public MovieCollection() {
+        public int Count {
+            get { return CountNodes(root); }
         }
 
-        public bool AddMovie(Movie movie) {
-            if (movieTree.Contains(movie.title)) {
-                return false;
-            } else {
-                movieTree.Add(movie);
+        /// <summary>
+        /// Add new movie to the tree
+        /// </summary>
+        /// <param name="movie">Movie object</param>
+        /// <returns>True if movie is added, False if movie already exists in the collection</returns>
+        public bool Add(Movie movie) {
+            if (root == null) {
+                root = new MovieNode(movie);
                 return true;
             }
-           
+
+            MovieNode pin = root;
+            while (true) {
+                // the title comes before the compared title
+                if (movie.CompareTo(pin.movie) < 0) {
+                    if (pin.left == null) {
+                        pin.left = new MovieNode(movie);
+                        return true;
+                    }
+                    pin = pin.left;
+                // the title comes after the compared title
+                } else if (pin.movie.CompareTo(movie) < 0) {
+                    if (pin.right == null) {
+                        pin.right = new MovieNode(movie);
+                        return true;
+                    }
+                    pin = pin.right;
+                // the title is same as the compared title (pin.movie.CompareTo(movie) == 0)
+                // the movie should not be added to the tree
+                } else {
+                    return false;
+                }
+            }
         }
 
-        public void RemoveMovie(string title) {
-            movieTree.Remove(title);
+
+        /// <summary>
+        /// Get Movie object of title
+        /// </summary>
+        /// <param name="title">Movie title</param>
+        /// <returns>Movie object</returns>
+        public Movie GetMovie(string title) {
+            MovieNode pin = root;
+            while (pin != null) {
+                // found a movie
+                if (CompareMovie(pin.movie.title, title) == 0) {
+                    return pin.movie;
+                // the movie should be on the left side of current pin
+                } else if (CompareMovie(title, pin.movie.title) < 0) {
+                    pin = pin.left;
+                // the movie should be on the right side of current pin
+                } else if (CompareMovie(pin.movie.title, title) < 0) {
+                    pin = pin.right;
+                }
+            }
+            return null;
         }
 
+        /// <summary>
+        /// Remove movie objct of title from tree
+        /// </summary>
+        /// <param name="title">Movie title that is to be deleted</param>
+        public void Remove(string title) {
+            MovieNode parent = null;
+            MovieNode pin = root;
+            while (pin != null) {
+                // found a target movie
+                if (CompareMovie(pin.movie.title, title) == 0) {
+                    // no children
+                    if (pin.left == null && pin.right == null) {
+                        // current pin is root, so just empty the tree
+                        if (pin == root) {
+                            root = null;
+                        } else {
+                            // pin to be null, parent's left or right to be null
+                            UpdateMovieNode(parent, pin, null);
+                        }
+                    // has a child on the left hand side of current node (pin)
+                    } else if (pin.left != null && pin.right == null) {
+                        if (pin == root) {
+                            // root will be the node of the left hand side of current root
+                            root = root.left;
+                        } else {
+                            // move pin's left to pin's position
+                            UpdateMovieNode(parent, pin, pin.left);
+                        }
+                    // has a child on the right hand side of current node (pin)
+                    } else if (pin.left == null & pin.right != null) {
+                        if (pin == root) {
+                            root = root.right;
+                        } else {
+                            // move pin's right to pin's position
+                            UpdateMovieNode(parent, pin, pin.right);
+                        }
+                        // has children on both side of current node (pin)
+                    } else {
+                        
+                        MovieNode scopeParent = pin;
+                        MovieNode scopePin = pin.left;
+
+                        // find right-most node in left subtree
+                        while (scopePin.right != null) {
+                            scopeParent = scopePin;
+                            scopePin = scopePin.right;
+                        }
+                        // no right subtree in pin's left subtree
+                        // shift node up
+                        if (scopeParent == pin) {
+                            pin.movie = scopePin.movie;
+                            pin.left = scopePin.left;
+                        // let scope parent to take over scope pin's left
+                        // scope pin move to pin's (to be deleted) poistion
+                        } else {
+                            scopeParent.right = scopePin.left;
+                            pin.movie = scopePin.movie;
+                        }
+                    }
+                    return;
+                // title is on the left side of the pin
+                } else if (CompareMovie(title, pin.movie.title) < 0) {
+                    parent = pin;
+                    pin = pin.left;
+                // title is on the right side of the pin
+                } else if (CompareMovie(pin.movie.title, title) < 0) {
+                    parent = pin;
+                    pin = pin.right;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Move node position after deleting
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="target"></param>
+        /// <param name="replace"></param>
+        private void UpdateMovieNode(MovieNode parent, MovieNode target, MovieNode replace) {
+            if (parent.left == target) {
+                parent.left = replace;
+            } else {
+                parent.right = replace;
+            }
+        }
+
+        /// <summary>
+        /// Compare movie title
+        /// </summary>
+        /// <param name="title">movei title</param>
+        /// <param name="anotherTitle">another movie title</param>
+        /// <returns>
+        /// -1 if first argument comes before second
+        /// 0 if both argumets are same
+        /// 1 if first argument comes after second
+        /// </returns>
+        private int CompareMovie(string title, string anotherTitle) {
+            return string.Compare(title, anotherTitle);
+        }
+
+        /// <summary>
+        /// Count the number of all nodes in tree, given entry node as root 
+        /// </summary>
+        /// <param name="entry">
+        /// the top node of the tree that you want to count the number
+        /// set root node if you want to count the number of all nodes in entire tree
+        /// </param>
+        /// <returns>the number of nodes</returns>
+        private int CountNodes(MovieNode entry) {
+            if (entry == null) {
+                return 0;
+            } else {
+                MovieNode pin = entry;
+                return 1 + CountNodes(pin.left) + CountNodes(pin.right);
+            }
+        }
+
+        /// <summary>
+        /// Return all movies in alphabetical order of title using in-order traversal
+        /// </summary>
+        /// <returns>sorted movies</returns>
+        public Movie[] GetAllMovies() {
+
+            Movie[] sorted = new Movie[Count];
+            int count = 0;
+            InOrderTraversal(root);
+
+            // perform in-order traersal
+            void InOrderTraversal(MovieNode node) {
+                if (node == null) {
+                    return;
+                } else {
+                    InOrderTraversal(node.left);
+                    sorted[count] = node.movie;
+                    count++;
+                    InOrderTraversal(node.right);
+                }
+            }
+
+            return sorted;
+        }
+
+        /// <summary>
+        /// Call this function when the member returns movie
+        /// The function evaluates the given movie title, and search by this title name,
+        /// and increment the number of available copies of the movie in movie collection
+        /// </summary>
+        /// <param name="movie">the movie to be returned</param>
+        /// <returns>It always returns true</returns>
         public bool ReturnMovie(Movie movie) {
-            Movie found = movieTree.GetMovie(movie.title);
+            Movie found = GetMovie(movie.title);
+            // movie might have been deleted, but it doesn't matter, just drop it.
             if (found != null) {
                 found.Returned();
             }
             return true;
         }
 
-        public Movie GetMovie(string title) {
-            return movieTree.GetMovie(title);
-        }
-
-        public Movie[] GetAllMovies() {
-            return movieTree.GetAllNodes();
-        }
-
-        private Movie[] GetBorrowingRankingSortedMovies() {
-            Movie[] array = movieTree.GetAllNodes();
+        /// <summary>
+        /// Sort movies according to number of borrow times
+        /// Quick sort is performed 
+        /// </summary>
+        /// <returns>sorted movie array</returns>
+        private Movie[] GetSortedAccordingToBorrowingTimes() {
+            Movie[] array = GetAllMovies();
             void QuickSort(Movie[] movies, int left, int right) {
 
                 if (left >= right) { return; }
@@ -75,10 +267,13 @@ namespace CAB301Assignment {
             return array;
         }
 
-        public Ranking[] GetTopTenMovies() {
-            Movie[] sorted = GetBorrowingRankingSortedMovies();
 
-            if (sorted.Length == 0) { return null;  }
+        /// <summary>
+        /// Retrieve only top ten movies from sorted array
+        /// </summary>
+        /// <returns>top 10 Ranking object as Ranking[10]</returns>
+        public Ranking[] GetTopTenMovies() {
+            Movie[] sorted = GetSortedAccordingToBorrowingTimes();
             Ranking[] topten = new Ranking[] {
                 new Ranking(),
                 new Ranking(),
@@ -91,23 +286,27 @@ namespace CAB301Assignment {
                 new Ranking(),
                 new Ranking()
             };
+            if (sorted.Length == 0) { return topten; }
+            // keep track of sorted array
             int index = 0;
             // loop to create top 10 rank
             for (int i = 0; i < 10; i++) {
-                if (index > sorted.Length - 1) { // there is no element for current rank order
-                    topten[i] = new Ranking(); // empty rank
+                // if there is no movie for current rank order
+                if (index > sorted.Length - 1) {
+                    // create empty rank and skip
+                    topten[i] = new Ranking();
                     continue; // skip
-                } else {  // add the first element of the rank
+                } else {
+                    // add the first element of the rank
                     topten[i].Add(sorted[index]);
                     index++;
-                    while (true) {
-                        if(index > sorted.Length - 1) {
-                            break;
-                        }
-                        // if number of borrowed is equal to the number of borrowed of the previous element
+                    // check if the next index has same number of borrowing times
+                    while (index < sorted.Length) {
+                        // if it has the same number of borrowing times, add that movie in the same rank
                         if (sorted[index - 1].NumBorrowed == sorted[index].NumBorrowed) {
                             topten[i].Add(sorted[index]);
                             index++;
+                        // otherwise, break out the while loop and move to next rank object
                         } else {
                             break;
                         }
@@ -115,8 +314,6 @@ namespace CAB301Assignment {
                     continue;
                 }
             }
-
-            // retrieve top 10 (order in 1st - 10th)
 
             return topten;
         }

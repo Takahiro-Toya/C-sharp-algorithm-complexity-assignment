@@ -3,39 +3,50 @@
 namespace CAB301Assignment {
     class Program {
 
+        // keep track of current page
         private static AppStatus appStatus = AppStatus.MainMenu;
 
         private static MovieCollection movieCollection = new  MovieCollection();
         private static MemberCollection memberCollection = new MemberCollection();
 
+        // staff login info
         private static string staffUsername = "staff";
         private static string staffPassword = "today123";
 
+        // verification code
         private static bool staffVerified = false;
         private static bool memberVerified = false;
 
+        // holds user object
         private static Member user = null;
 
+
+        /// <summary>
+        /// TEST only
+        /// </summary>
         private static void TESTaddMovie() {
             Movie[] movies = new Movie[] {
-                new Movie("Starwars(m1)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 9),
+                new Movie("Starwars(m1)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 59),
                 new Movie("Ponyo(m2)", "star1", "director1", 240, Genre.Adventure, Classification.General, 2009, 0),
                 new Movie("Totoro(m3)", "star1", "director1", 240, Genre.Action, Classification.Mature, 2009, 3),
                 new Movie("Someanime(m4)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 20),
-                new Movie("Unchi(m5)", "star1", "director1", 240, Genre.Action, Classification.ParentalGuidance, 2009, 2),
-                new Movie("Lalaland(m6)", "star1", "director1", 240, Genre.Comedy, Classification.ParentalGuidance, 2009, 1),
+                new Movie("Unchi(m5)", "star1", "director1", 240, Genre.Action, Classification.ParentalGuidance, 2009, 28),
+                new Movie("Lalaland(m6)", "star1", "director1", 240, Genre.Comedy, Classification.ParentalGuidance, 2009, 13),
                 new Movie("Chinchin(m7)", "star1", "director1", 240, Genre.Family, Classification.MatureAccompanied, 2009, 9),
-                new Movie("Boringmovie(m8)", "star1", "director1", 240, Genre.Other, Classification.General, 2009, 6),
-                new Movie("Kelkel(m9)", "star1", "director1", 240, Genre.Thriller, Classification.General, 2009, 9),
-                new Movie("Goodmornig(m10)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 5),
-                new Movie("AustraliaDocumentary(m11)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 9),
-                new Movie("hahahahah(m12)", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2009, 9),
+                new Movie("Boringmovie(m8)", "star1", "director1", 240, Genre.Other, Classification.General, 2009, 69),
+                new Movie("Kelkel(m9)", "star1", "director1", 240, Genre.Thriller, Classification.General, 2009, 99),
+                new Movie("Goodmornig(m10)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 54),
+                new Movie("AustraliaDocumentary(m11)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 105),
+                new Movie("hahahahah(m12)", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2009, 103),
             };
             foreach(Movie m in movies) {
-                movieCollection.AddMovie(m);
+                movieCollection.Add(m);
             }
         }
 
+        /// <summary>
+        /// TEST only
+        /// </summary>
         private static void TESTaddMember() {
             Member[] members = new Member[] {
                 new Member("Takahiro", "Toya", "address1", "12345678", "1111"),
@@ -52,7 +63,13 @@ namespace CAB301Assignment {
             }
         }
 
+
+        /// <summary>
+        /// Includes TEST functions at first two lines
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args) {
+            // comment out or delete below two lines (TEST function)
             TESTaddMovie();
             TESTaddMember();
             while (appStatus != AppStatus.Exit) {
@@ -100,7 +117,9 @@ namespace CAB301Assignment {
             }
         }
     
-
+        /// <summary>
+        /// Landing page
+        /// </summary>
         static void MainMenu() {
             staffVerified = false;
             memberVerified = false;
@@ -111,22 +130,18 @@ namespace CAB301Assignment {
                 "2. Member Login\n" +
                 "0. Exit\n" +
                 "================================");
-            switch (Reusables.waitUserResponse("\n Please make a selection (1-2, or 0 to exit): ", new int[] { 0, 1, 2 })) {
-                case 0:
-                    appStatus = AppStatus.Exit;
-                    break;
-                case 1:
-                    appStatus = AppStatus.StaffMenu;
-                    break;
-                case 2:
-                    appStatus = AppStatus.MemberMenu;
-                    break;
-                default:
-                    appStatus = AppStatus.Exit;
-                    break;
-            }
+            appStatus = (Reusables.waitUserResponse("\n Please make a selection (1-2, or 0 to exit): ", new int[] { 0, 1, 2 })) switch
+            {
+                0 => AppStatus.Exit,
+                1 => AppStatus.StaffMenu,
+                2 => AppStatus.MemberMenu,
+                _ => AppStatus.Exit,
+            };
         }
 
+        /// <summary>
+        /// Staff menu
+        /// </summary>
         static void StaffMenu() {
             if (!staffVerified) {
                 StaffLogin();
@@ -139,29 +154,21 @@ namespace CAB301Assignment {
                     "4. Find a registered member's phone number\n" +
                     "0. Return to main menu\n" +
                     "=================================");
-                switch (Reusables.waitUserResponse("\n Please make a selection (1-4 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4 })) {
-                    case 0:
-                        appStatus = AppStatus.MainMenu;
-                        break;
-                    case 1:
-                        appStatus = AppStatus.Staff1;
-                        break;
-                    case 2:
-                        appStatus = AppStatus.Staff2;
-                        break;
-                    case 3:
-                        appStatus = AppStatus.Staff3;
-                        break;
-                    case 4:
-                        appStatus = AppStatus.Staff4;
-                        break;
-                    default:
-                        appStatus = AppStatus.MainMenu;
-                        break;
-                }
+                appStatus = (Reusables.waitUserResponse("\n Please make a selection (1-4 or 0 to return to main menu): ", new int[] { 0, 1, 2, 3, 4 })) switch
+                {
+                    0 => AppStatus.MainMenu,
+                    1 => AppStatus.Staff1,
+                    2 => AppStatus.Staff2,
+                    3 => AppStatus.Staff3,
+                    4 => AppStatus.Staff4,
+                    _ => AppStatus.MainMenu,
+                };
             }
         }
 
+        /// <summary>
+        /// Member menu
+        /// </summary>
         static void MemberMenu() {
             if (!memberVerified) {
                 MemberLogin();
@@ -201,7 +208,11 @@ namespace CAB301Assignment {
             }
         }
 
+        /// <summary>
+        /// Handles staff login
+        /// </summary>
         static void StaffLogin() {
+            // repeat until correct username is typed
             while (true) {
                 Console.Write("username: ");
                 if (Console.ReadLine() == staffUsername) {
@@ -211,6 +222,7 @@ namespace CAB301Assignment {
                 }
             }
 
+            // repeat until correct password is typed
             while (true) {
                 Console.Write("password: ");
                 if (Console.ReadLine() == staffPassword) {
@@ -222,7 +234,11 @@ namespace CAB301Assignment {
             staffVerified = true;
         }
 
+        /// <summary>
+        /// Handles member login
+        /// </summary>
         static void MemberLogin() {
+            // back to main menu when there is no member registered
             if (memberCollection.NumMembers == 0) {
                 Console.WriteLine("\n ** No member registered ** \n");
                 appStatus = AppStatus.MainMenu;
@@ -231,7 +247,7 @@ namespace CAB301Assignment {
                 Member search = null;
                 while(true) {
                     Console.Write("username: ");
-                    search = memberCollection.FindMember(Console.ReadLine());
+                    search = memberCollection.GetMember(Console.ReadLine());
                     if (search == null) {
                         Console.WriteLine("\n ** member not found ** \n");
                     } else {
@@ -253,21 +269,19 @@ namespace CAB301Assignment {
         }
 
 
-        // W.I.P
         /// <summary>
         /// Add a new movie DVD
         /// </summary>
         static void Staff1Package() {
             Movie m = StaffOptions.Staff1();
-            if (movieCollection.AddMovie(m)) {
-                Console.WriteLine("\n !!! Movie added !!! \n");
+            if (movieCollection.Add(m)) {
+                Console.WriteLine("\n !!! Movie added ({0}) !!! \n", m.title);
             } else {
                 Console.WriteLine("\n ** Movie already exists ** \n");
             }
             appStatus = AppStatus.StaffMenu;
         }
 
-        // W.I.P
         /// <summary>
         /// Remove a movie DVD
         /// </summary>
@@ -275,11 +289,10 @@ namespace CAB301Assignment {
             Movie[] movies = movieCollection.GetAllMovies();
             if (movies.Length == 0) {
                 Console.WriteLine("\n ** No movies available ** \n");
-                return;
             } else {
                 string title = StaffOptions.Staff2(movies);
-                movieCollection.RemoveMovie(title);
-                Console.WriteLine("\n !!! Movie DVD removed !!! \n");
+                movieCollection.Remove(title);
+                Console.WriteLine("\n !!! Movie DVD removed ({0}) !!! \n", title);
             }
             appStatus = AppStatus.StaffMenu;
         }
@@ -290,8 +303,11 @@ namespace CAB301Assignment {
         /// </summary>
         static void Staff3Package() {
             Member m = StaffOptions.Staff3();
-            memberCollection.RegisterMember(m);
-            Console.WriteLine("\n !!! Member registered !!! \n");
+            if (memberCollection.RegisterMember(m)) {
+                Console.WriteLine("\n !!! Member registered !!! \n");
+            } else {
+                Console.WriteLine("\n ** Member already exists ** \n");
+            }
             appStatus = AppStatus.StaffMenu;
         }
 
@@ -299,8 +315,9 @@ namespace CAB301Assignment {
         /// Find a registered member's phone number
         /// </summary>
         static void Staff4Package() {
-            string ph = memberCollection.FindMemberPhoneNumber(StaffOptions.Staff4());
-            Console.WriteLine("\n Phone number is: {0} \n", ph);
+            string username = StaffOptions.Staff4();
+            string ph = memberCollection.FindMemberPhoneNumber(username);
+            Console.WriteLine("\n {0}'s phone number is: {1} \n", username, ph);
             appStatus = AppStatus.StaffMenu;
         }
 
@@ -317,7 +334,7 @@ namespace CAB301Assignment {
         /// Borrow a movie DVD
         /// </summary>
         static void Member2Package() {
-            Movie[] movies = movieCollection.GetAllMovies();
+            Movie[] movies = movieCollection.GetAllMovies(); // this is sorted alphabetically
             if (movies.Length == 0) {
                 Console.WriteLine("\n ** No movies available ** \n");
             } else {
@@ -325,16 +342,17 @@ namespace CAB301Assignment {
                 Movie m = movieCollection.GetMovie(title);
                 try {
                     // user already borrow this movie
-                    if (user.ContainsMovie(m)) {
-                        Console.WriteLine("\n ** You already have been borrowing this movie** \n");
+                    if (user.HoldsMovie(m.title)) {
+                        Console.WriteLine("\n ** You already have been borrowing this movie ** \n");
                     // user does not hold this movie, AND;
                     } else {
                         // movie is available
                         if (m.IsAvailable) {
-                            // fetch success code 
-                            if (user.BorrowMovie(m)) {
+                            // make a copy of movie and fetch success code
+                            // (false returned if user already has same title movid DVD)
+                            if (user.BorrowMovie(m.MakeCopy())) {
                                 m.Borrowed();
-                                Console.WriteLine("\n !!! Successfully borrowed !!! \n");
+                                Console.WriteLine("\n !!! Successfully borrowed ({0}) !!! \n", m.title);
                             // fetch error code after checking current number of borrowing in user account
                             } else {
                                 Console.WriteLine("\n ** You reach maximum number of borrowing ** \n");
@@ -345,7 +363,7 @@ namespace CAB301Assignment {
                     }
                     // should not occur as the title is selected by index number
                 } catch {
-                    Console.WriteLine("\n ** Something wrong, borrow failed ** \n");
+                    Console.WriteLine("\n ** Something went wrong, borrow failed ** \n");
                 }
 
             }
@@ -361,13 +379,17 @@ namespace CAB301Assignment {
             } else {
                 string title = MemberOptions.Member3(user.GetBorrowingMovies());
                 user.ReturnMovie(title);
-                movieCollection.GetMovie(title).Returned();
+                Movie movie = movieCollection.GetMovie(title);
+                if (movie != null) {
+                    movie.Returned();
+                }
+                Console.WriteLine("\n !!! Movie returned ({0}) !!! \n", title);
             }
             appStatus = AppStatus.MemberMenu;
         }
 
         /// <summary>
-        /// List currently borrowing movie DVDs
+        /// List all movies that the member is currently borrowing
         /// </summary>
         static void Member4Package() {
             if (user.NumBorrowing == 0) {
