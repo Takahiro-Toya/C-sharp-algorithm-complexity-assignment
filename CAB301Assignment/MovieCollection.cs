@@ -286,35 +286,24 @@ namespace CAB301Assignment {
                 new Ranking(),
                 new Ranking()
             };
-            if (sorted.Length == 0) { return topten; }
-            // keep track of sorted array
-            int index = 0;
-            // loop to create top 10 rank
-            for (int i = 0; i < 10; i++) {
-                // if there is no movie for current rank order
-                if (index > sorted.Length - 1) {
-                    // create empty rank and skip
-                    topten[i] = new Ranking();
-                    continue; // skip
-                } else {
-                    // add the first element of the rank
-                    topten[i].Add(sorted[index]);
-                    index++;
-                    // check if the next index has same number of borrowing times
-                    while (index < sorted.Length) {
-                        // if it has the same number of borrowing times, add that movie in the same rank
-                        if (sorted[index - 1].NumBorrowed == sorted[index].NumBorrowed) {
-                            topten[i].Add(sorted[index]);
-                            index++;
-                        // otherwise, break out the while loop and move to next rank object
-                        } else {
-                            break;
-                        }
-                    }
-                    continue;
-                }
+            if (sorted.Length == 0) {
+                return topten;
             }
 
+            int rank = 0; // from rank 1 to rank 10 (0 ~ 9 for array reference)
+            //int index = 1; // array index in 'sorted'
+            topten[0].Add(sorted[0]);
+            for(int i = 1; i < sorted.Length; i++) {
+                if (rank >= 10) { break; }
+                if (sorted[i - 1].NumBorrowed == sorted[i].NumBorrowed) {
+                    topten[rank].Add(sorted[i]);
+                } else {
+                    if (rank < 9) {
+                        rank++;
+                        topten[rank].Add(sorted[i]);
+                    }
+                }
+            }
             return topten;
         }
     }

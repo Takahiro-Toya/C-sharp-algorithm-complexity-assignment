@@ -39,8 +39,13 @@ namespace CAB301Assignment {
                 new Movie("AustraliaDocumentary(m11)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 105),
                 new Movie("hahahahah(m12)", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2009, 103),
             };
+            int counter = 10;
             foreach(Movie m in movies) {
                 movieCollection.Add(m);
+                for (int i = 0; i < counter; i++) {
+                    m.Borrowed();
+                }
+                counter--;
             }
         }
 
