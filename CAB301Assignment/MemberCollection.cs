@@ -41,9 +41,9 @@ namespace CAB301Assignment {
             Member member = GetMember(username);
             // member does not exist 
             if (member == null) {
-                return "User not found";
+                return "\n ** member not found ** \n";
             } else {
-                return member.phoneNumber;
+                return string.Format("\n {0}'s phoneNumber is: {1} \n", username, member.phoneNumber);
             }
         }
 

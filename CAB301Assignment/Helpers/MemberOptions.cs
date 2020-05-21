@@ -102,25 +102,25 @@ namespace CAB301Assignment {
         /// <summary>
         /// Supports output for displaying top 10 movies
         /// </summary>
-        /// <param name="rank">collection of Ranking objects</param>
+        /// <param name="rank">collection of Ranking objects (in this case, the array size must be 10 !!!</param>
         /// <returns>top 10 text</returns>
         public static string Member5(Ranking[] rank) {
             Console.WriteLine("\n=====Top 10 list=====");
 
             string text = "";
             // for rank (1 ~ 10)
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i< 10; i++) {
                 // current rank does not have any movies in
                 if (rank[i].movies.Length == 0) {
                     text += string.Format("{0}. -----\n", i + 1);
                     continue;
                 }
                 // iterate over inside the current rank 
-                for (int j = 0; j < rank[i].Counter; j++) {
+                for (int j = 0; j<rank[i].Counter; j++) {
                     // for first object of the rank, display rank number
                     if (j == 0) {
                         text += string.Format("{0}. {1} ({2})\n", i + 1, rank[i].movies[j].title, rank[i].movies[j].NumBorrowed);
-                        // for duplicates, do not display rank number, instead dispaly "|" so that it is clear that they are in same rank
+    // for duplicates, do not display rank number, instead dispaly "|" so that it is clear that they are in same rank
                     } else {
                         text += string.Format(" | {0} ({1})\n", rank[i].movies[j].title, rank[i].movies[j].NumBorrowed);
                     }

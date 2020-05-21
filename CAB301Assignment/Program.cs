@@ -24,49 +24,57 @@ namespace CAB301Assignment {
         /// <summary>
         /// TEST only
         /// </summary>
-        private static void TESTaddMovie() {
-            Movie[] movies = new Movie[] {
-                new Movie("Starwars(m1)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 59),
-                new Movie("Ponyo(m2)", "star1", "director1", 240, Genre.Adventure, Classification.General, 2009, 0),
-                new Movie("Totoro(m3)", "star1", "director1", 240, Genre.Action, Classification.Mature, 2009, 3),
-                new Movie("Someanime(m4)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 20),
-                new Movie("Unchi(m5)", "star1", "director1", 240, Genre.Action, Classification.ParentalGuidance, 2009, 28),
-                new Movie("Lalaland(m6)", "star1", "director1", 240, Genre.Comedy, Classification.ParentalGuidance, 2009, 13),
-                new Movie("Chinchin(m7)", "star1", "director1", 240, Genre.Family, Classification.MatureAccompanied, 2009, 9),
-                new Movie("Boringmovie(m8)", "star1", "director1", 240, Genre.Other, Classification.General, 2009, 69),
-                new Movie("Kelkel(m9)", "star1", "director1", 240, Genre.Thriller, Classification.General, 2009, 99),
-                new Movie("Goodmornig(m10)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 54),
-                new Movie("AustraliaDocumentary(m11)", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 105),
-                new Movie("hahahahah(m12)", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2009, 103),
-            };
-            int counter = 10;
-            foreach(Movie m in movies) {
-                movieCollection.Add(m);
-                for (int i = 0; i < counter; i++) {
-                    m.Borrowed();
-                }
-                counter--;
-            }
-        }
+        //private static void TESTaddMovie() {
+        //    Movie[] movies = new Movie[] {
+        //        new Movie("Hello world", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 50),
+        //        new Movie("Jave world", "star1", "director1", 240, Genre.Adventure, Classification.General, 2009, 50),
+        //        new Movie("C# world", "star1", "director1", 240, Genre.Action, Classification.Mature, 1996, 50),
+        //        new Movie("C language", "star1", "director1", 240, Genre.Action, Classification.General, 1998, 50),
+        //        new Movie("cab301", "star1", "director1", 240, Genre.Action, Classification.ParentalGuidance, 2009, 50),
+        //        new Movie("The Python story", "star1", "director1", 240, Genre.Comedy, Classification.ParentalGuidance, 2009, 50),
+        //        new Movie("JavaScript land", "star1", "director1", 240, Genre.Family, Classification.MatureAccompanied, 2005, 50),
+        //        new Movie("Swift wars", "star1", "director1", 240, Genre.Other, Classification.General, 2017, 50),
+        //        new Movie("Sydney documentary", "star1", "director1", 240, Genre.Thriller, Classification.General, 2009, 50),
+        //        new Movie("Brisbane movie", "star1", "director1", 240, Genre.Action, Classification.General, 2018, 50),
+        //        new Movie("C++++++++++", "star1", "director1", 240, Genre.Action, Classification.General, 2009, 50),
+        //        new Movie("Australian wildlife", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2003, 0),
+        //        new Movie("Brisbane romance", "star1", "director1", 240, Genre.Drama, Classification.General, 2019, 50),
+        //        new Movie("Sydney romance", "star1", "director1", 240, Genre.Thriller, Classification.Mature, 2016, 50),
+        //        new Movie("Some movie", "star1", "director1", 240, Genre.Animated, Classification.Mature, 2019, 50),
+        //        new Movie("The life of chinese president", "star1", "director1", 240, Genre.Comedy, Classification.ParentalGuidance, 2020, 50),
+        //        new Movie("Some movie 2", "star1", "director1", 240, Genre.Comedy, Classification.General, 2016, 50),
+        //        new Movie("Some movie 3", "star1", "director1", 240, Genre.Drama, Classification.General, 2020, 50)
+        //    };
+        //    int counter = 40;
+        //    foreach (Movie m in movies) {
+        //        movieCollection.Add(m);
+        //        for(int j=0; j<counter; j++) {
+        //            m.Borrowed();
+        //        }
+        //        counter--;
+        //    }
+        //}
 
         /// <summary>
         /// TEST only
         /// </summary>
-        private static void TESTaddMember() {
-            Member[] members = new Member[] {
-                new Member("Takahiro", "Toya", "address1", "12345678", "1111"),
-                new Member("Takashi", "Mochizuki", "address2", "23456789", "2222"),
-                new Member("Richard", "Wang", "address3", "34567890", "3333"),
-                new Member("Adam", "Susu", "address4", "45678901", "4444"),
-                new Member("Hello", "Unko", "address5", "56789012", "5555"),
-                new Member("Keiko", "Kitagawa", "address6", "67890123", "6666"),
-                new Member("Good", "Morning", "address7", "78901234", "7777"),
-                new Member("Sydney", "Australia", "address8", "89012345", "8888"),
-            };
-            foreach (Member m in members) {
-                memberCollection.RegisterMember(m);
-            }
-        }
+        //private static void TESTaddMember() {
+        //    // pre-set 9 members
+        //    Member[] members = new Member[] {
+        //        new Member("Brisbane", "Australia", "brisbane", "12345678", "1111"),
+        //        new Member("Sydney", "Australia", "sydney", "23456789", "2222"),
+        //        new Member("Perth", "Australia", "perth", "34567890", "3333"),
+        //        new Member("Cairns", "Australia", "cairns", "45678901", "4444"),
+        //        new Member("Melbourne", "Australia", "melobourne", "56789012", "5555"),
+        //        new Member("GoldCoast", "Australia", "gold coast", "67890123", "6666"),
+        //        new Member("Darwin", "Australia", "darwin", "78901234", "7777"),
+        //        new Member("Hobart", "Australia", "hobart", "89012345", "8888"),
+        //        new Member("Adelaide", "Australia", "adelaide", "90123456", "9999")
+        //    };
+        //    foreach (Member m in members) {
+        //        memberCollection.RegisterMember(m);
+        //    }
+        //}
 
 
         /// <summary>
@@ -75,8 +83,8 @@ namespace CAB301Assignment {
         /// <param name="args"></param>
         static void Main(string[] args) {
             // comment out or delete below two lines (TEST function)
-            TESTaddMovie();
-            TESTaddMember();
+            //TESTaddMovie();
+            //TESTaddMember();
             while (appStatus != AppStatus.Exit) {
                 switch (appStatus) {
                     case AppStatus.MainMenu:
@@ -291,7 +299,7 @@ namespace CAB301Assignment {
         /// Remove a movie DVD
         /// </summary>
         static void Staff2Package() {
-            Movie[] movies = movieCollection.GetAllMovies();
+            Movie[] movies = movieCollection.GetAlphabetical();
             if (movies.Length == 0) {
                 Console.WriteLine("\n ** No movies available ** \n");
             } else {
@@ -321,8 +329,7 @@ namespace CAB301Assignment {
         /// </summary>
         static void Staff4Package() {
             string username = StaffOptions.Staff4();
-            string ph = memberCollection.FindMemberPhoneNumber(username);
-            Console.WriteLine("\n {0}'s phone number is: {1} \n", username, ph);
+            Console.WriteLine(memberCollection.FindMemberPhoneNumber(username));
             appStatus = AppStatus.StaffMenu;
         }
 
@@ -330,7 +337,7 @@ namespace CAB301Assignment {
         /// Display all movies
         /// </summary>
         static void Member1Package() {
-            Console.WriteLine(MemberOptions.Member1(movieCollection.GetAllMovies()));
+            Console.WriteLine(MemberOptions.Member1(movieCollection.GetAlphabetical()));
             Reusables.waitUserPressEnter();
             appStatus = AppStatus.MemberMenu;
         }
@@ -339,7 +346,7 @@ namespace CAB301Assignment {
         /// Borrow a movie DVD
         /// </summary>
         static void Member2Package() {
-            Movie[] movies = movieCollection.GetAllMovies(); // this is sorted alphabetically
+            Movie[] movies = movieCollection.GetAlphabetical(); // this is sorted alphabetically
             if (movies.Length == 0) {
                 Console.WriteLine("\n ** No movies available ** \n");
             } else {

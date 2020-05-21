@@ -5,11 +5,12 @@ namespace CAB301Assignment {
 
         private MovieNode root = null;
 
+        private int count = 0;
         /// <summary>
         /// number of nodes in this tree
         /// </summary>
         public int Count {
-            get { return CountNodes(root); }
+            get { return count; }
         }
 
         /// <summary>
@@ -20,6 +21,7 @@ namespace CAB301Assignment {
         public bool Add(Movie movie) {
             if (root == null) {
                 root = new MovieNode(movie);
+                count++;
                 return true;
             }
 
@@ -29,6 +31,7 @@ namespace CAB301Assignment {
                 if (movie.CompareTo(pin.movie) < 0) {
                     if (pin.left == null) {
                         pin.left = new MovieNode(movie);
+                        count++;
                         return true;
                     }
                     pin = pin.left;
@@ -36,6 +39,7 @@ namespace CAB301Assignment {
                 } else if (pin.movie.CompareTo(movie) < 0) {
                     if (pin.right == null) {
                         pin.right = new MovieNode(movie);
+                        count++;
                         return true;
                     }
                     pin = pin.right;
@@ -129,6 +133,7 @@ namespace CAB301Assignment {
                             pin.movie = scopePin.movie;
                         }
                     }
+                    count--;
                     return;
                 // title is on the left side of the pin
                 } else if (CompareMovie(title, pin.movie.title) < 0) {
@@ -171,45 +176,28 @@ namespace CAB301Assignment {
         }
 
         /// <summary>
-        /// Count the number of all nodes in tree, given entry node as root 
-        /// </summary>
-        /// <param name="entry">
-        /// the top node of the tree that you want to count the number
-        /// set root node if you want to count the number of all nodes in entire tree
-        /// </param>
-        /// <returns>the number of nodes</returns>
-        private int CountNodes(MovieNode entry) {
-            if (entry == null) {
-                return 0;
-            } else {
-                MovieNode pin = entry;
-                return 1 + CountNodes(pin.left) + CountNodes(pin.right);
-            }
-        }
-
-        /// <summary>
         /// Return all movies in alphabetical order of title using in-order traversal
         /// </summary>
         /// <returns>sorted movies</returns>
-        public Movie[] GetAllMovies() {
+        public Movie[] GetAlphabetical() {
 
-            Movie[] sorted = new Movie[Count];
-            int count = 0;
+            Movie[] alphabetic = new Movie[Count];
+            int inorderCounter = 0;
             InOrderTraversal(root);
-
-            // perform in-order traersal
+            /// <summary>
+            /// In order traversal (visit from left to right)
+            /// </summary>
             void InOrderTraversal(MovieNode node) {
                 if (node == null) {
                     return;
                 } else {
                     InOrderTraversal(node.left);
-                    sorted[count] = node.movie;
-                    count++;
+                    alphabetic[inorderCounter] = node.movie;
+                    inorderCounter++;
                     InOrderTraversal(node.right);
                 }
             }
-
-            return sorted;
+            return alphabetic;
         }
 
         /// <summary>
@@ -233,38 +221,49 @@ namespace CAB301Assignment {
         /// Quick sort is performed 
         /// </summary>
         /// <returns>sorted movie array</returns>
-        private Movie[] GetSortedAccordingToBorrowingTimes() {
-            Movie[] array = GetAllMovies();
+        private Movie[] GetSortedAccordingToBorrowedTimes() {
+            Movie[] sorted = GetAlphabetical(); // traversal method does not matter (time complexity ... same)
+            QuickSort(sorted, 0, sorted.Length - 1);
+
+            /// <summary>
+            /// Quick sort to sort movies in order of number of borrow times
+            /// This method contains partition part 
+            /// </summary>
             void QuickSort(Movie[] movies, int left, int right) {
 
                 if (left >= right) { return; }
-
+                // for simplicity determine pivot from leftmost element of movies array
                 Movie pivot = movies[left];
+                // markers
                 int l = left;
                 int r = right;
 
                 while (true) {
+                    // move left marker 
                     while (movies[l].NumBorrowed > pivot.NumBorrowed) {
                         l++;
                     }
+                    // move right marker 
                     while (movies[r].NumBorrowed < pivot.NumBorrowed) {
                         r--;
                     }
+                    // left reaches right
                     if (l >= r) {
                         break;
                     }
+                    // swap left and right
                     Movie temp = movies[l];
                     movies[l] = movies[r];
                     movies[r] = temp;
                     l++;
                     r--;
                 }
-
+                // patition
                 QuickSort(movies, left, l - 1);
                 QuickSort(movies, r + 1, right);
             }
-            QuickSort(array, 0, array.Length - 1);
-            return array;
+
+            return sorted;
         }
 
 
@@ -273,34 +272,29 @@ namespace CAB301Assignment {
         /// </summary>
         /// <returns>top 10 Ranking object as Ranking[10]</returns>
         public Ranking[] GetTopTenMovies() {
-            Movie[] sorted = GetSortedAccordingToBorrowingTimes();
-            Ranking[] topten = new Ranking[] {
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking(),
-                new Ranking()
-            };
+            Movie[] sorted = GetSortedAccordingToBorrowedTimes();
+            Ranking[] topten = new Ranking[10];
+            for (int i=0; i<10; i++) {
+                topten[i] = new Ranking();
+            }
             if (sorted.Length == 0) {
                 return topten;
             }
 
             int rank = 0; // from rank 1 to rank 10 (0 ~ 9 for array reference)
-            //int index = 1; // array index in 'sorted'
             topten[0].Add(sorted[0]);
-            for(int i = 1; i < sorted.Length; i++) {
+            for (int i = 1; i < sorted.Length; i++) {
                 if (rank >= 10) { break; }
                 if (sorted[i - 1].NumBorrowed == sorted[i].NumBorrowed) {
                     topten[rank].Add(sorted[i]);
                 } else {
+                    // there is rank 10 space available, so increment
                     if (rank < 9) {
                         rank++;
                         topten[rank].Add(sorted[i]);
+                        // there is no more rank space available, so break;
+                    } else {
+                        break;
                     }
                 }
             }
