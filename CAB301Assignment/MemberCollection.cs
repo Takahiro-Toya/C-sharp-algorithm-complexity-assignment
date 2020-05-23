@@ -17,19 +17,18 @@ namespace CAB301Assignment {
         /// Register a new member 
         /// </summary>
         /// <param name="member">New member object</param>
-        public bool RegisterMember(Member member) {
+        public string RegisterMember(Member member) {
             // if member already exists (username must be unique in the system)
             // OR if the number members registered in the system is 10
-            if ((GetMember(member.username) != null) || numMembers >= 10) {
-                return false;
+            if (GetMember(member.username) != null) {
+                return "\n ** Member already exists ** \n";
+            } else if (numMembers >= MAX_MEMBERS) {
+                return "\n ** No more members can be registered ** \n";
             } else {
-                for (int i = 0; i < MAX_MEMBERS; i++) {
-                    members[numMembers] = member;
-                    numMembers++;
-                    return true;
-                }
+                members[numMembers] = member;
+                numMembers++;
+                return "\n !!! Member registered !!! \n";
             }
-            return false;
         }
 
         /// <summary>

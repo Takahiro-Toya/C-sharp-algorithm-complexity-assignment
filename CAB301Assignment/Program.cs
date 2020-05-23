@@ -316,11 +316,7 @@ namespace CAB301Assignment {
         /// </summary>
         static void Staff3Package() {
             Member m = StaffOptions.Staff3();
-            if (memberCollection.RegisterMember(m)) {
-                Console.WriteLine("\n !!! Member registered !!! \n");
-            } else {
-                Console.WriteLine("\n ** Member already exists ** \n");
-            }
+            Console.WriteLine(memberCollection.RegisterMember(m));
             appStatus = AppStatus.StaffMenu;
         }
 
