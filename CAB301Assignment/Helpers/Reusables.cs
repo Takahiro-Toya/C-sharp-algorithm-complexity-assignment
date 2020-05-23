@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
 namespace CAB301Assignment {
 
@@ -58,9 +57,16 @@ namespace CAB301Assignment {
             string input = "aaaa";
             while (true) {
                 Console.Write(text);
-                input = Console.ReadLine();
-                if (Regex.IsMatch(input, @"\d{4,4}")) {
-                    break;
+                char[] ic = Console.ReadLine().ToCharArray();
+                // check if input is 4 char length
+                if (ic.Length == 4) {
+                    // check if the input is 4 digits
+                    if (char.IsDigit(ic[0]) && char.IsDigit(ic[1]) && char.IsDigit(ic[2]) && char.IsDigit(ic[3])) {
+                        input = ic[0].ToString() + ic[1].ToString() + ic[2].ToString() + ic[3].ToString();
+                        break;
+                    } else {
+                        Console.WriteLine(" \n ** Please input 4 digit numer ** \n");
+                    }
                 } else {
                     Console.WriteLine(" \n ** Please input 4 digit numer ** \n");
                 }
